@@ -80,7 +80,7 @@ class Sheets {
 			return $result;
 		},array($id));
 	}
-	public static function init($id) {
+	public static function init($id, $options = array()) {
 		$result = Sheets::listFolder($id);
 		
 		$res = array();
@@ -99,7 +99,7 @@ class Sheets {
 			$d = Sheets::readBook($file['id']);
 			$res[] = Xlsx::make($d,$fd['name']);
 		}
-		$data = Xlsx::initData($res);
+		$data = Xlsx::initData($res, $options);
 	
 		return $data;
 	}
@@ -109,8 +109,7 @@ class Sheets {
 			$servsheet = Sheets::getServiceSheets();
 
 			$response = $servsheet->spreadsheets->get($id);
-
-			Boo::setTitle($response['name']);
+			Boo::setTitle($response->properties->title);
 
 			$sheets = array();
 			$ranges = array();
