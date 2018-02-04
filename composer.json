@@ -2,5 +2,8 @@
 	"name":"akiyatkin/catalog-drive",
 	"require":{
 		"infrajs/catalog":"~1"
+	},
+	"autoload": {
+		"psr-4": { "akiyatkin\\catalog\\drive\\": "" }
 	}
 }
