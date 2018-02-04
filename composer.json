@@ -1,0 +1,6 @@
+{
+	"name":"akiyatkin/catalog-drive",
+	"require":{
+		"infrajs/catalog":"~1"
+	}
+}
