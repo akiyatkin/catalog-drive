@@ -58,7 +58,7 @@ class Sheets {
 		return $data;
 	}*/
 	public static function listFolder($id) {
-		return Cache::exec('Список файлов в папке', function ($id) {
+		return Cache::exec('Список файлов в папке Google', function ($id) {
 			$service = Sheets::getServiceDrive();
 			$result = array();
 			$pageToken = NULL;
