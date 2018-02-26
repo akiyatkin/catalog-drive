@@ -5,10 +5,11 @@ use Google_Client;
 use Google_Service_Drive;
 use infrajs\load\Load;
 use infrajs\excel\Xlsx;
-use akiyatkin\boo\Boo;
+use akiyatkin\boo\Cache;
 
 class Sheets {
 	public static $conf = array(
+		'folder' => false,
 		'certificate'=>'~.client_secret.json'
 	);
 	public static function getClient() 
@@ -57,12 +58,12 @@ class Sheets {
 		return $data;
 	}*/
 	public static function listFolder($id) {
-		return Boo::cache(['catalog-drive-listFolder','Список файлов в папке'], function ($id) {
+		return Cache::exec('Список файлов в папке', function ($id) {
 			$service = Sheets::getServiceDrive();
 			$result = array();
 			$pageToken = NULL;
 			$folder = $service->files->get($id);
-			Boo::setTitle($folder['name']);
+			Cache::setTitle($folder['name']);
 			do {
 				try {
 				  $parameters = array('q' => "'".$id."' in parents and trashed=false");
@@ -104,12 +105,12 @@ class Sheets {
 		return $data;
 	}
 	public static function readBook($id) {
-		return Boo::cache(['catalog-drive-readBook','Разбор Excel'], function($id){
+		return Cache::exec('Разбор Excel', function($id){
 
 			$servsheet = Sheets::getServiceSheets();
 
 			$response = $servsheet->spreadsheets->get($id);
-			Boo::setTitle($response->properties->title);
+			Cache::setTitle($response->properties->title);
 
 			$sheets = array();
 			$ranges = array();

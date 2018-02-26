@@ -5,8 +5,9 @@ use infrajs\excel\Xlsx;
 use infrajs\catalog\Catalog;
 
 Event::handler('Catalog.oninit', function(&$data){
+	if (!Sheets::$conf['folder']) return;
 	$options = Catalog::getOptions();
-	$data2 = Sheets::init('1Q34TcZvy-MexZPJS8gl3GYo8dK-6l5uU', $options);
+	$data2 = Sheets::init(Sheets::$conf['folder'], $options);
 
 	$data = Xlsx::merge([$data,$data2]);
 	

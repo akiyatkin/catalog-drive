@@ -1,3 +1,4 @@
 {
-	"require":"infra.php"
+	"require":"infra.php",
+	"conf":"akiyatkin\\catalog\\drive\\Sheets"
 }
