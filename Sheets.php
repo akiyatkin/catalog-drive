@@ -105,7 +105,7 @@ class Sheets {
 		return $data;
 	}
 	public static function readBook($id) {
-		return Cache::exec('Разбор Excel', function($id){
+		return Cache::exec('Разбор Таблицы Google', function($id){
 
 			$servsheet = Sheets::getServiceSheets();
 
