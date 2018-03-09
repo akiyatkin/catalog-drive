@@ -6,6 +6,7 @@ use Google_Service_Drive;
 use infrajs\load\Load;
 use infrajs\excel\Xlsx;
 use akiyatkin\boo\Cache;
+use akiyatkin\boo\BooCache;
 
 class Sheets {
 	public static $conf = array(
@@ -58,12 +59,12 @@ class Sheets {
 		return $data;
 	}*/
 	public static function listFolder($id) {
-		return Cache::exec('Список файлов в папке Google', function ($id) {
+		return BooCache::exec('Список файлов в папке Google', function ($id) {
 			$service = Sheets::getServiceDrive();
 			$result = array();
 			$pageToken = NULL;
 			$folder = $service->files->get($id);
-			Cache::setTitle($folder['name']);
+			BooCache::setTitle($folder['name']);
 			do {
 				try {
 				  $parameters = array('q' => "'".$id."' in parents and trashed=false");
@@ -82,35 +83,37 @@ class Sheets {
 		},array($id));
 	}
 	public static function init($id, $options = array()) {
-		$result = Sheets::listFolder($id);
-		
-		$res = array();
-		foreach ($result as $k => $file) {
+		return BooCache::exec('Данные каталога из Таблиц Google', function ($id, $options) { 
+			$result = Sheets::listFolder($id);
+			BooCache::setTitle($id);
+			$res = array();
+			foreach ($result as $k => $file) {
+					
+				if ($file['mimeType'] != 'application/vnd.google-apps.spreadsheet') continue;
+				$fd = Load::nameInfo($file['name']);
 				
-			if ($file['mimeType'] != 'application/vnd.google-apps.spreadsheet') continue;
-			$fd = Load::nameInfo($file['name']);
-			
-			$data = array();
+				$data = array();
 
-			$data['name'] = $fd['name'];
-			$data['id'] = $fd['id']; 
-			$data['driveid'] = $file['id'];
-			$data['date'] = $fd['date'];
-			
-			$d = Sheets::readBook($file['id']);
-			$res[] = Xlsx::make($d,$fd['name']);
-		}
-		$data = Xlsx::initData($res, $options);
-	
-		return $data;
+				$data['name'] = $fd['name'];
+				$data['id'] = $fd['id']; 
+				$data['driveid'] = $file['id'];
+				$data['date'] = $fd['date'];
+				
+				$d = Sheets::readBook($file['id']);
+				$res[] = Xlsx::make($d,$fd['name']);
+			}
+			$data = Xlsx::initData($res, $options);
+			return $data;
+		}, array($id, $options));
+		
 	}
 	public static function readBook($id) {
-		return Cache::exec('Разбор Таблицы Google', function($id){
+		return BooCache::exec('Разбор Таблицы Google', function($id){
 
 			$servsheet = Sheets::getServiceSheets();
 
 			$response = $servsheet->spreadsheets->get($id);
-			Cache::setTitle($response->properties->title);
+			BooCache::setTitle($response->properties->title);
 
 			$sheets = array();
 			$ranges = array();

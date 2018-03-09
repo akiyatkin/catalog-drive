@@ -1,4 +1,12 @@
 {
 	"require":"infra.php",
-	"conf":"akiyatkin\\catalog\\drive\\Sheets"
+	"conf":"akiyatkin\\catalog\\drive\\Sheets",
+	"update":"update.php",
+	"folder":false,
+	"startsteps":{
+		"Данные каталога из Google Таблиц":{
+			"href":"/-catalog-drive/",
+			"func":"Sheets::init()"
+		}
+	}
 }
