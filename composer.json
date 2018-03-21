@@ -1,7 +1,8 @@
 {
 	"name":"akiyatkin/catalog-drive",
 	"require":{
-		"infrajs/catalog":"~1"
+		"infrajs/catalog":"~1",
+		"google/apiclient": "~2"
 	},
 	"autoload": {
 		"psr-4": { "akiyatkin\\catalog\\drive\\": "" }
