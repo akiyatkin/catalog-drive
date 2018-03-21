@@ -8,7 +8,6 @@ Event::handler('Catalog.oninit', function(&$data){
 	if (!Sheets::$conf['folder']) return;
 	$options = Catalog::getOptions();
 	$data2 = Sheets::init(Sheets::$conf['folder'], $options);
-
 	$data = Xlsx::merge([$data,$data2]);
 	
 	Xlsx::runGroups($data, function &(&$group) {

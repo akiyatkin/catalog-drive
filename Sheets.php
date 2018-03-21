@@ -7,6 +7,7 @@ use infrajs\load\Load;
 use infrajs\excel\Xlsx;
 use akiyatkin\boo\Cache;
 use akiyatkin\boo\BooCache;
+use infrajs\nostore\Nostore;
 
 class Sheets {
 	public static $conf = array(
@@ -83,7 +84,7 @@ class Sheets {
 		},array($id));
 	}
 	public static function init($id, $options = array()) {
-		return BooCache::exec('Данные каталога из Таблиц Google', function ($id, $options) { 
+		$res = BooCache::exec('Данные каталога из Таблиц Google', function ($id) { 
 			$result = Sheets::listFolder($id);
 			BooCache::setTitle($id);
 			$res = array();
@@ -92,19 +93,22 @@ class Sheets {
 				if ($file['mimeType'] != 'application/vnd.google-apps.spreadsheet') continue;
 				$fd = Load::nameInfo($file['name']);
 				
-				$data = array();
+				/*$data = array();
 
 				$data['name'] = $fd['name'];
 				$data['id'] = $fd['id']; 
 				$data['driveid'] = $file['id'];
-				$data['date'] = $fd['date'];
+				$data['date'] = $fd['date'];*/
 				
 				$d = Sheets::readBook($file['id']);
 				$res[] = Xlsx::make($d,$fd['name']);
 			}
-			$data = Xlsx::initData($res, $options);
-			return $data;
-		}, array($id, $options));
+			return $res;
+		}, array($id));
+
+		$data = Xlsx::initData($res, $options);
+		
+		return $data;
 		
 	}
 	public static function readBook($id) {
@@ -117,7 +121,7 @@ class Sheets {
 
 			$sheets = array();
 			$ranges = array();
-			foreach($response->sheets as $s) {
+			foreach ($response->sheets as $s) {
 			    $ranges[$s['properties']['title']] = $s['properties']['title'].'!A:Z';
 			    $sheets[] = $s['properties']['title'];
 			}
