@@ -6,6 +6,7 @@ use Google_Service_Drive;
 use infrajs\load\Load;
 use infrajs\excel\Xlsx;
 use akiyatkin\boo\Cache;
+use infrajs\once\Once;
 use akiyatkin\boo\BooCache;
 use infrajs\nostore\Nostore;
 
@@ -92,14 +93,7 @@ class Sheets {
 					
 				if ($file['mimeType'] != 'application/vnd.google-apps.spreadsheet') continue;
 				$fd = Load::nameInfo($file['name']);
-				
-				/*$data = array();
 
-				$data['name'] = $fd['name'];
-				$data['id'] = $fd['id']; 
-				$data['driveid'] = $file['id'];
-				$data['date'] = $fd['date'];*/
-				
 				$d = Sheets::readBook($file['id']);
 				$res[] = Xlsx::make($d,$fd['name']);
 			}
