@@ -68,18 +68,19 @@ class Sheets {
 			$folder = $service->files->get($id);
 			BooCache::setTitle($folder['name']);
 			do {
-				try {
+				//try {
 				  $parameters = array('q' => "'".$id."' in parents and trashed=false");
 				  if ($pageToken) {
 						$parameters['pageToken'] = $pageToken;
 				  }
+				  $parameters['orderBy'] = 'name';
 
 				  $files = $service->files->listFiles($parameters);
 				  $result = array_merge($result, $files->files);
 				  $pageToken = $files->getNextPageToken();
-				} catch (\Exception $e) {
-				  break;
-				}
+				//} catch (\Exception $e) {
+				//  break;
+				//}
 			} while ($pageToken);
 			return $result;
 		},array($id));
