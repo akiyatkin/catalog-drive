@@ -10,6 +10,7 @@ Access::test(true);
 Nostore::on();
 $res = Rest::get(function( $id = false ){
 	if (!$id) $id = Sheets::$conf['folder'];
+	if (!$id) return [];
 	return Sheets::init($id);
 });
 
